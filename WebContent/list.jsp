@@ -37,20 +37,30 @@ tr, th, td {
 			</center>
 			<tr align=center>
 				<th>BID</th>
-				<th>CID</th>
+				<th>Category</th>
 				<th>Title</th>
+				<th>Description</th>
 				<th>Author</th>
+				<th>Published Date</th>
 				<th>ISBN</th>
+				<th>Price</th>
+				<th>Pages</th>
 				<th></th>
 
 			</tr>
 			<c:forEach var="book" items="${listBook}">
 				<tr align=center>
+				
 					<td><c:out value="${book.getBid()}" /></td>
-					<td><c:out value="${book.getCid()}" /></td>
+					<td><c:out value="${book.getCategory()}" /></td>
 					<td><c:out value="${book.getBooktitle()}" /></td>
+					<td><c:out value="${book.getDescription()}" /></td>
 					<td><c:out value="${book.getAuthor()}" /></td>
+					<td><c:out value="${book.getPublisheddate()}" /></td>
 					<td><c:out value="${book.getIsbn()}" /></td>
+					<td><c:out value="${book.getPrice()}" /></td>
+					<td><c:out value="${book.getNoofpages()}" /></td>
+
 					<td>|<a
 						href="${pageContext.request.contextPath}/AdminServlet?action=edit&id=<c:out
 						value='${book.getBid()}' />&login=1">Edit</a>|
