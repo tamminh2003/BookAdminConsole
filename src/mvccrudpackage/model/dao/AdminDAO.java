@@ -20,13 +20,17 @@ public class AdminDAO {
 	/* Database operation */
 	private String INSERTBOOKSQL = "INSERT INTO Books (bid, cid, booktitle, author, isbn, description) VALUES "
 			+ " (?, ?, ?, ?, ?, ?);";
-	private String SELECTBOOKID = "select bid, cid, booktitle, author, isbn from Books where bid =?";
-	private String SELECTALLBOOKS = "select bid, cid, booktitle, author, isbn from Books";
+	
+	private String SELECTBOOKID = "select * from books left join book_category using (cid) where bid =?;";
+	
 	private String DELETEBOOKSQL = "delete from Books where bid = ?;";
 	private String UPDATEBOOKSQL = "update Books set booktitle = ?, author= ? where bid = ?;";
 	private String SELECTMAXBID = "select max(bid) as bid from bookstore.books;";
-	private String SELECTCATEGORY = "select bid, cid, booktitle, author, isbn from books where cid = (select cid from book_category where categorytitle = ?);";
+	private String SELECTCATEGORY = "select bid, cid, booktitle, author, isbn"
+			+ "from books where cid = (select cid from book_category where categorytitle = ?);";
 
+	private String SELECTALLBOOKS = "select * from books left join book_category using (cid) order by bid;";
+	
 	/* Constructor */
 	public AdminDAO() {
 
@@ -73,7 +77,7 @@ public class AdminDAO {
 	}
 
 	public Book selectBook(int bid) {
-		Book book = null;
+		Book book = new Book();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -88,11 +92,17 @@ public class AdminDAO {
 			rs = preparedStatement.executeQuery();
 			// Step 4: Process the ResultSet object.
 			while (rs.next()) {
-				int cid = rs.getInt("cid");
-				String booktitle = rs.getString("booktitle");
-				String author = rs.getString("author");
-				String isbn = rs.getString("isbn");
-				book = new Book(bid, cid, booktitle, author, isbn);
+				
+				book.setBid(rs.getInt("bid"));
+				book.setBooktitle(rs.getString("booktitle"));
+				book.setDescription(rs.getString("description"));
+				book.setAuthor(rs.getString("author"));
+				book.setPublisheddate(rs.getTimestamp("publisheddate"));
+				book.setIsbn(rs.getString("isbn"));
+				book.setPrice(rs.getDouble("price"));
+				book.setNoofpages(rs.getInt("noofpages"));
+				book.setCategory(rs.getString("categorytitle"));
+				
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -120,13 +130,19 @@ public class AdminDAO {
 			rs = preparedStatement.executeQuery();
 			// Step 4: Process the ResultSet object.
 			while (rs.next()) {
-				int bid = rs.getInt("bid");
-				int cid = rs.getInt("cid");
-				String booktitle = rs.getString("booktitle");
-				String author = rs.getString("author");
-				String isbn = rs.getString("isbn");
+				Book book = new Book();
+				
+				book.setBid(rs.getInt("bid"));
+				book.setBooktitle(rs.getString("booktitle"));
+				book.setDescription(rs.getString("description"));
+				book.setAuthor(rs.getString("author"));
+				book.setPublisheddate(rs.getTimestamp("publisheddate"));
+				book.setIsbn(rs.getString("isbn"));
+				book.setPrice(rs.getDouble("price"));
+				book.setNoofpages(rs.getInt("noofpages"));
+				book.setCategory(rs.getString("categorytitle"));
 
-				books.add(new Book(bid, cid, booktitle, author, isbn));
+				books.add(book);
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
