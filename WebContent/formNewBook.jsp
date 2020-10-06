@@ -86,7 +86,7 @@
 			<tr>
 				<th>Published Date:</th>
 				<td><input type="date" name="publisheddate" size="45" required
-					value="<c:out value='${book.getPublisheddate()}' />" /></td>
+					value="<c:out value='${book.getPublisheddate().toLocalDateTime().toLocalDate()}' />" /></td>
 			</tr>
 			
 			<tr>
