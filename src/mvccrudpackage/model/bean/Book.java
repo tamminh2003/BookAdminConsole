@@ -12,6 +12,7 @@ public class Book {
 	protected String isbn;
 	protected double price;
 	protected int noofpages;
+	protected String category;
 
 	/* Constructor */
 	public Book() {
@@ -127,6 +128,14 @@ public class Book {
 
 	public void setNoofpages(int noofpages) {
 		this.noofpages = noofpages;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }
