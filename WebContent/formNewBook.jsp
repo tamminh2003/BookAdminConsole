@@ -49,14 +49,24 @@
 			</c:if>
 			
 			<tr>
-				<th>Book CID:</th>
-				<td><select name="cid">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				</select></td>
-				<!-- <input type="number" name="cid" required value="<c:out value='${book.getCid()}' />" /> -->
+				<th>Book Category:</th>
+				<c:if test="${book != null}">
+					<td><select name="cid">
+						<option <c:if test="${book.getCid() == 1}"> selected </c:if> value="1">Fantasy</option>
+						<option <c:if test="${book.getCid() == 2}"> selected </c:if> value="2">Adventure</option>
+						<option <c:if test="${book.getCid() == 3}"> selected </c:if> value="3">Romance</option>
+						<option <c:if test="${book.getCid() == 4}"> selected </c:if> value="4">Academic</option>
+					</select></td>
+				</c:if>
+			
+				<c:if test="${book == null}">
+					<td><select name="cid">
+						<option value="1">Fantasy</option>
+						<option value="2">Adventure</option>
+						<option value="3">Romance</option>
+						<option value="4">Academic</option>
+					</select></td>
+				</c:if>
 			</tr>
 			
 			<tr>
@@ -86,7 +96,7 @@
 			<tr>
 				<th>Published Date:</th>
 				<td><input type="date" name="publisheddate" size="45" required
-					value="<c:out value='${book.getPublisheddate()}' />" /></td>
+					value="<c:out value='${book.getPublisheddate().toLocalDateTime().toLocalDate()}' />" /></td>
 			</tr>
 			
 			<tr>
