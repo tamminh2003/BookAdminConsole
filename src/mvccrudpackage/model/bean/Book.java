@@ -3,6 +3,8 @@ package mvccrudpackage.model.bean;
 import java.sql.Timestamp;
 
 public class Book {
+	
+	// Attributes from Book table
 	protected int bid;
 	protected int cid;
 	protected String booktitle;
@@ -12,6 +14,8 @@ public class Book {
 	protected String isbn;
 	protected double price;
 	protected int noofpages;
+	
+	// Attribute from Book-Category table
 	protected String category;
 
 	/* Constructor */
