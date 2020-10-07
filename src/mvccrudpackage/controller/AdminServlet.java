@@ -91,6 +91,9 @@ public class AdminServlet extends HttpServlet {
 				case "search":
 					searchBook(request, response);
 					break;
+				case "select":
+					selectBook(request, response);
+					break;
 				default:
 					listBook(request, response);
 					break;
@@ -174,7 +177,17 @@ public class AdminServlet extends HttpServlet {
 		String category = request.getParameter("search");
 		List<Book> listBook = adminDAO.selectCategory(category);
 		request.setAttribute("listBook", listBook);
+		request.setAttribute("search", category);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	private void selectBook(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Book existingBook = adminDAO.selectBook(id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("book.jsp");
+		request.setAttribute("book", existingBook);
 		dispatcher.forward(request, response);
 	}
 }
