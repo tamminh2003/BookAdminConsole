@@ -10,6 +10,12 @@ tr, th, td {
 	border: thin solid black;
 	padding: 10px;
 }
+
+#search-container {
+	width: fit-content;
+	margin: auto;
+	padding: 100px;
+}
 </style>
 
 <script>
