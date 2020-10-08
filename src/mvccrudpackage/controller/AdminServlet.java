@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import mvccrudpackage.model.bean.Book;
 import mvccrudpackage.model.dao.AdminDAO;
@@ -38,10 +39,6 @@ public class AdminServlet extends HttpServlet {
 		adminDAO = new AdminDAO();
 		
 	}
-	
-	protected static boolean checkAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		return(request.getParameter("admin").equals("1"));
-	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -65,8 +62,8 @@ public class AdminServlet extends HttpServlet {
 		if(action == null) action = "no action";
 		
 		try {
-			System.out.println("Before adminLogin()");
-			System.out.println("SessionID = " + sessionID);
+			HttpSession session = request.getSession(false);
+			System.out.println("SessionID = " + session.getId());
 			
 			if(action.equals("adminLogin")) {
 				adminDAO.adminLogin(sessionID);
