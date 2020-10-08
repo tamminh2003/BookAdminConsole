@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 
 <html>
@@ -27,7 +28,7 @@
 	
 		<div id="form-container">
 			<form action="Validate.jsp" method="post">
-			
+		
 				<p>
 					<label for="uname"><b>Username</b></label> <input type="text"
 						placeholder="Enter Username" name="uname" required>
