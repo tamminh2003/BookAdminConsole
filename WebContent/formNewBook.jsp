@@ -21,13 +21,11 @@
 		<c:if test="${book != null}">
 			<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
 				<input type="hidden" name="action" value="update">
-				<input type="hidden" name="login" value="1">
 		</c:if>
 		
 		<c:if test="${book == null}">
-			<form action="${pageContext.request.contextPath}/AdminServlet?login=1" method="post">
+			<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
 				<input type="hidden" name="action" value="insert">
-				<input type="hidden" name="login" value="1">
 		</c:if>
 		
 		<table border="1" cellpadding="5">
