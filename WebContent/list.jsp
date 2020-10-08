@@ -41,17 +41,16 @@ tr, th, td {
 		
 		<div id="nav-menu">
 		
-			<h2>
-				<a href="${pageContext.request.contextPath}/AdminServlet?login=1">
-					Show Books
-				</a>
-			</h2>
-			
-			<h2>
-				<a href="${pageContext.request.contextPath}/AdminServlet?action=new&login=1">
-					Add	New Book
-				</a>
-			</h2>
+				<form action="AdminServlet" method="post">
+					<input type="hidden" name="sessionID" value="${pageContext.session.id}" />
+					<button type="submit">Show All Books</button>
+				</form>
+				
+				<form action="AdminServlet" method="post">
+					<input type="hidden" name="sessionID" value="${pageContext.session.id}" />
+					<input type="hidden" name="action" value="new" />
+					<button type="submit">Add New Book</button>
+				</form>
 		</div>
 		
 		<table>
