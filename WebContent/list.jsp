@@ -42,12 +42,10 @@ tr, th, td {
 		<div id="nav-menu">
 		
 				<form action="AdminServlet" method="post">
-					<input type="hidden" name="sessionID" value="${pageContext.session.id}" />
 					<button type="submit">Show All Books</button>
 				</form>
 				
 				<form action="AdminServlet" method="post">
-					<input type="hidden" name="sessionID" value="${pageContext.session.id}" />
 					<input type="hidden" name="action" value="new" />
 					<button type="submit">Add New Book</button>
 				</form>
