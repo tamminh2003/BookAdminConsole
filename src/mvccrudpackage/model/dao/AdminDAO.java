@@ -203,8 +203,6 @@ public class AdminDAO {
 	}
 	
 	public void adminLogin(String adminSessionID) {
-		System.out.println("Start of adminLogin()");
-		System.out.println("SessionID = " + adminSessionID);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
