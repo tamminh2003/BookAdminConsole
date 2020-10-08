@@ -62,7 +62,6 @@ p {
 				</p>
 				<c:if test="${uname.equals(admin)}">
 					<form name="myform" action="AdminServlet" method="post">
-						<input type="hidden" name="sessionID" value="${pageContext.session.id}">
 						<input type="hidden" name="action" value="adminLogin">
 					</form>
 					<script>submitForm();</script>
