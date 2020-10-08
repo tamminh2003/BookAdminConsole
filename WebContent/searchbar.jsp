@@ -8,7 +8,7 @@
 		<form action="AdminServlet" method="GET">
 			<input type="text" name="search" placeholder="Search by Category">
 			<input type="hidden" name="action" value="search">
-			<input type="hidden" name="login" value="1">
+			<input type="hidden" name="sessionID" value="${pageContext.session.id}">
 			<button type="submit">Search</button>
 		</form>
 
