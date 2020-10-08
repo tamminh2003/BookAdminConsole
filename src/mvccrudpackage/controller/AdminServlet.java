@@ -59,56 +59,59 @@ public class AdminServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// String action = request.getServletPath();
 
-		String login = request.getParameter("login");
+		String sessionID = request.getParameter("sessionID");
 		String action = request.getParameter("action");
+		if(action == null) action = "no action";
+		
 		try {
-			if (login != null) {
-
-				if (action == null) {
-					action = "No action";
-				}
-
+			System.out.println("Before adminLogin()");
+			System.out.println("SessionID = " + sessionID);
+			
+			if(action.equals("adminLogin")) {
+				adminDAO.adminLogin(sessionID);
+			}
+			
+			// -------------------------------------
+			if (adminDAO.adminCheck(sessionID)) {
+				// ---------------------------------
 				switch (action) {
-				
-				case "new":
-					showNewBook(request, response);
-					break;
-				case "insert":
-					insertBook(request, response);
-					break;
-				case "delete":
-					deleteBook(request, response);
-					break;
-				case "edit":
-					showEditBook(request, response);
-					break;
-				case "update":
-					updateBook(request, response);
-					break;
-				case "search":
-					searchBook(request, response);
-					break;
-				case "select":
-					selectBook(request, response);
-					break;
-				default:
-					listBook(request, response);
-					break;
-					
+					case "new":
+						showNewBook(request, response);
+						break;
+					case "insert":
+						insertBook(request, response);
+						break;
+					case "delete":
+						deleteBook(request, response);
+						break;
+					case "edit":
+						showEditBook(request, response);
+						break;
+					case "update":
+						updateBook(request, response);
+						break;
+					case "search":
+						searchBook(request, response);
+						break;
+					case "select":
+						selectBook(request, response);
+						break;
+					default:
+						listBook(request, response);
+						break;
 				}
-
+				// ---------------------------------
 			} else {
 				response.sendRedirect("Login.jsp");
 			}
+			// -------------------------------------
+			
 		} catch (Exception ex) {
 			throw new ServletException(ex);
 		}
-
 	}// End of doPost method
-
+	
 	private void listBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		List<Book> listBook = adminDAO.selectAllBooks();
