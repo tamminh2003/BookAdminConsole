@@ -57,20 +57,20 @@ public class AdminServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String sessionID = request.getParameter("sessionID");
 		String action = request.getParameter("action");
+		System.out.println("action = " + action);
+		
 		if(action == null) action = "no action";
 		
 		try {
 			HttpSession session = request.getSession(false);
-			System.out.println("SessionID = " + session.getId());
-			
+		
 			if(action.equals("adminLogin")) {
-				adminDAO.adminLogin(sessionID);
+				adminDAO.adminLogin(session.getId());
 			}
 			
 			// -------------------------------------
-			if (adminDAO.adminCheck(sessionID)) {
+			if (adminDAO.adminCheck(session.getId())) {
 				// ---------------------------------
 				switch (action) {
 					case "new":
@@ -155,13 +155,20 @@ public class AdminServlet extends HttpServlet {
 
 	private void updateBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
-		int bid = Integer.parseInt(request.getParameter("bid"));
-		int cid = Integer.parseInt(request.getParameter("cid"));
-		String booktitle = request.getParameter("booktitle");
-		String author = request.getParameter("author");
-		String isbn = request.getParameter("isbn");
-		Book e = new Book(bid, cid, booktitle, author, isbn);
-		adminDAO.updateBook(e);
+		Book book = new Book();
+		Timestamp date = Timestamp.valueOf(request.getParameter("publisheddate") + " 0:0:0");
+		
+		book.setBid( Integer.parseInt(request.getParameter("bid")) );
+		book.setCid( Integer.parseInt(request.getParameter("cid")) );
+		book.setBooktitle( request.getParameter("booktitle") );
+		book.setDescription( request.getParameter("description") );
+		book.setAuthor( request.getParameter("author") );
+		book.setPublisheddate( date );
+		book.setIsbn( request.getParameter("isbn") );
+		book.setPrice( Double.parseDouble(request.getParameter("price")) );
+		book.setNoofpages( Integer.parseInt(request.getParameter("noofpages")) );
+		
+		adminDAO.updateBook(book);
 		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=list&login=1");
 	}
 
