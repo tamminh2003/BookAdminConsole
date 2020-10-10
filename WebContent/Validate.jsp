@@ -10,7 +10,7 @@
 <head>
 <meta charset="ISO-8859-1">
 
-<title>Validate.jsp</title>
+<title>Admin Login</title>
 
 <style>
 p {
@@ -21,60 +21,73 @@ p {
 </style>
 
 <script>
-			function submitForm() {
-				document.forms["myform"].submit();
-			}
-		</script>
+	function submitForm() {
+		document.forms["myform"].submit();
+	}
+</script>
 </head>
 
 <body>
 
-	<%	//JDBC driver name and database URL
-		//STEP 2: Register JDBC driver	%>
+	<%
+	//JDBC driver name and database URL
+	//STEP 2: Register JDBC driver
+	%>
 
 	<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/bookstore" user="root"
 		password="mysql" />
 
-	<% //Getting Request parameters	%>
+	<%
+	//Getting Request parameters
+	%>
 
 	<c:set var="uname" scope="session" value="${param.uname}" />
 	<c:set var="psw" scope="session" value="${param.psw}" />
-	<c:set var="admin" value="Admin" />
 
-	<%	//STEP 3: Open a connection
-		//STEP 4: Execute a query %>
+	<%
+	//STEP 3: Open a connection
+	//STEP 4: Execute a query
+	%>
 
 	<sql:query dataSource="${snapshot}" var="result">
-		select count(*) as kount from users
+		select count(*) as kount, isadmin from users
  		where username = ? and pass = ?;
  	<sql:param value="${uname}" />
 		<sql:param value="${psw}" />
 	</sql:query>
 
-	<% //STEP 5: Extract data from result set %>
+	<%
+		//STEP 5: Extract data from result set
+	%>
 
 	<c:forEach items="${result.rows}" var="r">
 		<c:choose>
+		
 			<c:when test="${r.kount > 0}">
-				<p>
-					<c:out value="Welcome ${uname}!" />
-				</p>
-				<c:if test="${uname.equals(admin)}">
+				<c:if test="${r.isadmin}">
 					<form name="myform" action="AdminServlet" method="post">
 						<input type="hidden" name="action" value="adminLogin">
 					</form>
 					<script>submitForm();</script>
 				</c:if>
+				
+				<c:if test="${!r.isadmin}">
+					<p><c:out
+						value="Sorry, the username/password is incorrect for ${uname}, please check your username/password." />
+					</p>
+				</c:if>
 			</c:when>
+			
 			<c:otherwise>
-				<p>
-					<c:out
+				<p><c:out
 						value="Sorry, the username/password is incorrect for ${uname}, please check your username/password." />
 				</p>
 			</c:otherwise>
+			
 		</c:choose>
 	</c:forEach>
-
+	
+	<div align="center"><a href="adminLogin.jsp">Back</a></div>
 </body>
 </html>
