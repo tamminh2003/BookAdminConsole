@@ -22,7 +22,6 @@ import mvccrudpackage.model.dao.UserDAO;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	// TODO Remove comment once UserDAO class is done
 	private UserDAO userDAO;
        
     /**
@@ -32,7 +31,6 @@ public class UserServlet extends HttpServlet {
         super();
     }
     
-    // TODO Remove comment once UserDAO class is done
 	public void init() {
 		userDAO = new UserDAO();
 	}
@@ -48,15 +46,18 @@ public class UserServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String action = request.getParameter("action");
+		String username = request.getParameter("username");
 		System.out.println("action = " + action);
+		
 		if(action == null) action = "no action"; // Avoid error at action.equals()
 		
 		try {
 			HttpSession session = request.getSession(false);
 		
 			if(action.equals("userLogin"))
-				userDAO.userLogin(session.getId());
+				userDAO.userLogin(session.getId(), username);
 			else if(action.equals("userLogout"))
 				userDAO.userLogout(session.getId());
 				
@@ -92,7 +93,7 @@ public class UserServlet extends HttpServlet {
 		List<Book> listBook = userDAO.selectCategory(category);
 		request.setAttribute("listBook", listBook);
 		request.setAttribute("search", category);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("userList.jsp");
 		dispatcher.forward(request, response);
 	}
 
@@ -100,7 +101,7 @@ public class UserServlet extends HttpServlet {
 			throws SQLException, IOException, ServletException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		Book existingBook = userDAO.selectBook(id);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("book.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("userBook.jsp");
 		request.setAttribute("book", existingBook);
 		dispatcher.forward(request, response);
 	}
