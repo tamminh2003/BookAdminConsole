@@ -20,7 +20,7 @@
 	</head>
 	
 	<body>
-	
+	// TODO Redirect to AdminServlet when already logged in
 		<div id="form-container">
 			<form action="Validate.jsp" method="post">
 			
