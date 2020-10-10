@@ -7,16 +7,29 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>User Homepage</title>
+<style>
+tr, th, td {
+	border: thin solid black;
+	padding: 10px;
+}
+
+#search-container {
+	width: fit-content;
+	margin: auto;
+	padding: 100px;
+}
+</style>
 </head>
 <body>
 
 	<div align="center">
 
 		<h1>User Homepage</h1>
-		<h1>Test</h1>
 
 		<c:if test="${search != null}">
-			<h1><c:out value="${search} Search Result" /></h1>
+			<h1>
+				<c:out value="${search} Search Result" />
+			</h1>
 		</c:if>
 
 		<c:if test="${search == null}">
@@ -24,6 +37,11 @@
 		</c:if>
 
 		<div id="nav-menu">
+			<form action="UserServlet" method="post">
+				<button type="submit">Show All Books</button>
+				<br><br>
+			</form>
+			
 			<form action="UserServlet" method="post">
 				<input type="hidden" name="action" value="userLogout" />
 				<button type="submit">Logout</button>
@@ -60,7 +78,7 @@
 
 					<td><a
 						href="${pageContext.request.contextPath}/UserServlet?action=select&id=<c:out
-						value='${book.getBid()}' />&login=1">Select</a>|
+						value='${book.getBid()}' />&login=1">Select</a>
 					</td>
 				</tr>
 			</c:forEach>
