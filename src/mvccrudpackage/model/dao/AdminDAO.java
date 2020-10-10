@@ -32,6 +32,7 @@ public class AdminDAO {
 			+ "where cid = (select cid from book_category where categorytitle = ?);";
 	private String SELECTALLBOOKS = "select * from books left join book_category using (cid) order by bid;";
 	private String SESSIONUPDATE = "INSERT INTO session VALUES (?, true)";
+	private String SESSIONDELETE = "DELETE FROM session WHERE sessionid = ?;";
 	private String ADMINCHECK = "select isAdmin from session where sessionid = ?";
 	
 	/* Constructor */
@@ -217,6 +218,28 @@ public class AdminDAO {
 			connection = getConnection();
 			// Step 2:Create a statement using connection object
 			preparedStatement = connection.prepareStatement(SESSIONUPDATE);
+			preparedStatement.setString(1, adminSessionID);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			preparedStatement.executeUpdate();
+			// Step 4: Process the ResultSet object.
+	
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+		}
+	}
+	
+	public void adminLogout(String adminSessionID) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SESSIONDELETE);
 			preparedStatement.setString(1, adminSessionID);
 			System.out.println(preparedStatement);
 			// Step 3: Execute the query or update query
