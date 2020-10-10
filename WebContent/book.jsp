@@ -10,7 +10,6 @@
 <head>
 <meta charset="ISO-8859-1">
 
-<!-- TODO ADD book title here ${book.getBooktitle()} -->
 <title><c:out value="${book.getBooktitle()}" /></title>
 
 </head>
