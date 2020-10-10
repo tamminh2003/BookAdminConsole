@@ -29,26 +29,12 @@ p {
 
 <body>
 
-	<%
-	//JDBC driver name and database URL
-	//STEP 2: Register JDBC driver
-	%>
-
 	<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/bookstore" user="root"
 		password="mysql" />
 
-	<%
-	//Getting Request parameters
-	%>
-
 	<c:set var="uname" scope="session" value="${param.uname}" />
 	<c:set var="psw" scope="session" value="${param.psw}" />
-
-	<%
-	//STEP 3: Open a connection
-	//STEP 4: Execute a query
-	%>
 
 	<sql:query dataSource="${snapshot}" var="result">
 		select count(*) as kount from users
@@ -57,20 +43,14 @@ p {
 		<sql:param value="${psw}" />
 	</sql:query>
 
-	<%
-		//STEP 5: Extract data from result set
-	%>
-
 	<c:forEach items="${result.rows}" var="r">
 		<c:choose>
-
 			<c:when test="${r.kount > 0}">
 				<form name="myform" action="UserServlet" method="post">
 					<input type="hidden" name="action" value="userLogin">
+					<input type="hidden" name="username" value="${uname}" />
 				</form>
-				<script>
-					submitForm();
-				</script>
+				<script>submitForm();</script>
 			</c:when>
 
 			<c:otherwise>
@@ -83,6 +63,8 @@ p {
 		</c:choose>
 	</c:forEach>
 
-	<div align="center"><a href="adminLogin.jsp">Back</a></div>
+	<div align="center">
+		<a href="Login.jsp">Back</a>
+	</div>
 </body>
 </html>
