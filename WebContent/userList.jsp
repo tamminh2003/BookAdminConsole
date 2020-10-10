@@ -13,6 +13,7 @@
 	<div align="center">
 
 		<h1>User Homepage</h1>
+		<h1>Test</h1>
 
 		<c:if test="${search != null}">
 			<h1><c:out value="${search} Search Result" /></h1>
