@@ -8,23 +8,21 @@
 </head>
 <body>
 	<!-- List All Book -->
-	<center>
-		<h4>
-			<a href="${pageContext.request.contextPath}/AdminServlet?action=list&login=1">List
-				All Books</a>
-		</h4>
-	</center>
+	<div align="center">
+		<form action="AdminServlet" method="post">
+			<button type="submit">Show All Books</button>
+		</form>
+	</div>
 	<!-- ------------- -->
 
 	<div align="center">
-	
+		<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
+		
 		<c:if test="${book != null}">
-			<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
 				<input type="hidden" name="action" value="update">
 		</c:if>
 		
 		<c:if test="${book == null}">
-			<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
 				<input type="hidden" name="action" value="insert">
 		</c:if>
 		
