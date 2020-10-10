@@ -21,7 +21,7 @@ public class UserDAO {
 	private String DBPassword = "mysql";
 
 	/* Database userLogin and userLogout operation SQL */
-	private String SESSIONUPDATE = "INSERT INTO session VALUES (?, false);";
+	private String SESSIONUPDATE = "INSERT INTO session VALUES (?, ?);";
 	private String SESSIONDELETE = "DELETE FROM session WHERE sessionid = ?;";
 	private String USERCHECK = "select * from session where sessionid = ?;";
 
@@ -44,7 +44,7 @@ public class UserDAO {
 		return connection;
 	}
 
-	public void userLogin(String userSessionID) {
+	public void userLogin(String userSessionID, String username) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -54,6 +54,7 @@ public class UserDAO {
 			// Step 2:Create a statement using connection object
 			preparedStatement = connection.prepareStatement(SESSIONUPDATE);
 			preparedStatement.setString(1, userSessionID);
+			preparedStatement.setString(2, username);
 			System.out.println(preparedStatement);
 			// Step 3: Execute the query or update query
 			preparedStatement.executeUpdate();
