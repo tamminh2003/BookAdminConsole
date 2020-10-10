@@ -31,13 +31,10 @@ public class AdminServlet extends HttpServlet {
 	 */
 	public AdminServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void init() {
-		
 		adminDAO = new AdminDAO();
-		
 	}
 
 	/**
@@ -46,7 +43,6 @@ public class AdminServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doPost(request, response);
 	}
 
@@ -67,6 +63,8 @@ public class AdminServlet extends HttpServlet {
 		
 			if(action.equals("adminLogin")) {
 				adminDAO.adminLogin(session.getId());
+			} else if(action.equals("adminLogout")) {
+				adminDAO.adminLogout(session.getId());
 			}
 			
 			// -------------------------------------
@@ -100,7 +98,7 @@ public class AdminServlet extends HttpServlet {
 				}
 				// ---------------------------------
 			} else {
-				response.sendRedirect("Login.jsp");
+				response.sendRedirect("adminLogin.jsp");
 			}
 			// -------------------------------------
 			
