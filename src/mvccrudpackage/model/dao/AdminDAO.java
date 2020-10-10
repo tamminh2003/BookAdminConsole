@@ -53,14 +53,14 @@ public class AdminDAO {
 		}
 		return connection;
 	}
-
+	
+	/* Admin Operation methods */
 	public void insertBook(Book book) throws SQLException {
 		int maxBid = selectMaxBid();
 		
 		System.out.println(INSERTBOOKSQL);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		
 
 		try {
 			connection = getConnection();
