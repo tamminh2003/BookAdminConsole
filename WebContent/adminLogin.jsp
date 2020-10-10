@@ -2,6 +2,7 @@
 
 <html>
 	<head>
+		<title>Admin Login</title>
 		<style>
 			#form-container {
 				box-sizing: content-box;
@@ -39,6 +40,7 @@
 			</form>
 		</div>
 		
+		<div align="center"><a href="index.jsp">Back</a></div>
 	</body>
 	
 </html>
