@@ -27,10 +27,8 @@ public class test {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(DBURL, DBUsername, DBPassword);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return connection;

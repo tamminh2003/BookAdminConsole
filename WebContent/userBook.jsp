@@ -56,7 +56,7 @@
 			
 		</table>
 
-		<a href="${pageContext.request.contextPath}/AdminServlet?login=1">
+		<a href="${pageContext.request.contextPath}/UserServlet">
 			Show Books </a>
 			
 	</div>

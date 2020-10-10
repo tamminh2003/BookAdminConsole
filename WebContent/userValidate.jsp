@@ -10,7 +10,7 @@
 <head>
 <meta charset="ISO-8859-1">
 
-<title>Admin Login</title>
+<title>User Login</title>
 
 <style>
 p {
@@ -37,7 +37,7 @@ p {
 	<c:set var="psw" scope="session" value="${param.psw}" />
 
 	<sql:query dataSource="${snapshot}" var="result">
-		select count(*) as kount, isadmin from users
+		select count(*) as kount from users
  		where username = ? and pass = ?;
  	<sql:param value="${uname}" />
 		<sql:param value="${psw}" />
@@ -45,32 +45,26 @@ p {
 
 	<c:forEach items="${result.rows}" var="r">
 		<c:choose>
-		
 			<c:when test="${r.kount > 0}">
-				<c:if test="${r.isadmin}">
-					<form name="myform" action="AdminServlet" method="post">
-						<input type="hidden" name="action" value="adminLogin" />
-						<input type="hidden" name="username" value="${uname}" />
-					</form>
-					<script>submitForm();</script>
-				</c:if>
-				
-				<c:if test="${!r.isadmin}">
-					<p><c:out
-						value="Sorry, the username/password is incorrect for ${uname}, please check your username/password." />
-					</p>
-				</c:if>
+				<form name="myform" action="UserServlet" method="post">
+					<input type="hidden" name="action" value="userLogin">
+					<input type="hidden" name="username" value="${uname}" />
+				</form>
+				<script>submitForm();</script>
 			</c:when>
-			
+
 			<c:otherwise>
 				<p><c:out
-						value="Sorry, the username/password is incorrect for ${uname}, please check your username/password." />
+						value="Sorry, the username/password is incorrect 
+						for ${uname}, please check your username/password." />
 				</p>
 			</c:otherwise>
-			
+
 		</c:choose>
 	</c:forEach>
-	
-	<div align="center"><a href="adminLogin.jsp">Back</a></div>
+
+	<div align="center">
+		<a href="Login.jsp">Back</a>
+	</div>
 </body>
 </html>

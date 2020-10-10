@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import mvccrudpackage.model.bean.Book;
 
 public class AdminDAO {
@@ -18,18 +21,19 @@ public class AdminDAO {
 	private String DBPassword = "mysql";
 
 	
-	/* Database operation */
+	/* Database operation SQL */
 	private String INSERTBOOKSQL = "insert into books values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	
 	private String SELECTBOOKID = "select * from books left join book_category using (cid) where bid =?;";
 	private String DELETEBOOKSQL = "delete from Books where bid = ?;";
-	private String UPDATEBOOKSQL = "update Books set booktitle = ?, author= ? where bid = ?;";
+	private String UPDATEBOOKSQL = "update Books set cid=?, booktitle=?, description=?, author=?, "
+			+ "publisheddate=?, isbn=?, price=?, noofpages=? where bid = ?;";
 	private String SELECTMAXBID = "select max(bid) as bid from bookstore.books;";
-	private String SELECTCATEGORY = "select * "
-			+ "from books left join book_category using (cid)"
-			+ " where cid = (select cid from book_category where categorytitle = ?);";
-
+	private String SELECTCATEGORY = "select * from books left join book_category using (cid) "
+			+ "where cid = (select cid from book_category where categorytitle = ?);";
 	private String SELECTALLBOOKS = "select * from books left join book_category using (cid) order by bid;";
+	private String SESSIONUPDATE = "INSERT INTO session VALUES (?, ?)";
+	private String SESSIONDELETE = "DELETE FROM session WHERE sessionid = ?;";
+	private String ADMINCHECK = "select isAdmin from users where username = (select username from session where sessionid= ?)";
 	
 	/* Constructor */
 	public AdminDAO() {
@@ -43,27 +47,25 @@ public class AdminDAO {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(DBURL, DBUsername, DBPassword);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return connection;
 	}
-
+	
+	/* Admin Operation methods */
 	public void insertBook(Book book) throws SQLException {
 		int maxBid = selectMaxBid();
 		
 		System.out.println(INSERTBOOKSQL);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		
-		// try-with-resource statement will auto close the connection.
+
 		try {
-			
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(INSERTBOOKSQL);
+			
 			preparedStatement.setInt(1, maxBid + 1);
 			preparedStatement.setInt(2, book.getCid());
 			preparedStatement.setString(3, book.getBooktitle());
@@ -75,7 +77,6 @@ public class AdminDAO {
 			preparedStatement.setInt(9, book.getNoofpages());
 			
 			System.out.println(preparedStatement);
-			
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -124,12 +125,12 @@ public class AdminDAO {
 	}
 
 	public List<Book> selectAllBooks() {
-		// Book book = null;
+
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
-		// using try-with-resources to avoid closing resources (boiler plate code)
 		List<Book> books = new ArrayList<>();
+		
 		// Step 1: Establishing a Connection
 		try {
 			connection = getConnection();
@@ -181,20 +182,103 @@ public class AdminDAO {
 		boolean bookUpdated = false;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(UPDATEBOOKSQL);
 
-			preparedStatement.setString(1, book.getBooktitle());
-			preparedStatement.setString(2, book.getAuthor());
-			preparedStatement.setInt(3, book.getBid());
+			preparedStatement.setInt(1, book.getCid());
+			preparedStatement.setString(2, book.getBooktitle());
+			preparedStatement.setString(3, book.getDescription());
+			preparedStatement.setString(4, book.getAuthor());
+			preparedStatement.setTimestamp(5, book.getPublisheddate());
+			preparedStatement.setString(6, book.getIsbn());
+			preparedStatement.setDouble(7, book.getPrice());
+			preparedStatement.setInt(8, book.getNoofpages());
+			preparedStatement.setInt(9, book.getBid());
+			
+			System.out.println(preparedStatement);
+			
 			bookUpdated = preparedStatement.executeUpdate() > 0 ? true : false;
 		} catch (SQLException e) {
 			printSQLException(e);
 		} finally {
 			finallySQLException(connection, preparedStatement, null);
 		}
+		
 		return bookUpdated;
+	}
+	
+	public void adminLogin(String adminSessionID, String username) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SESSIONUPDATE);
+			preparedStatement.setString(1, adminSessionID);
+			preparedStatement.setString(2, username);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			preparedStatement.executeUpdate();
+			// Step 4: Process the ResultSet object.
+	
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+		}
+	}
+	
+	public void adminLogout(String adminSessionID) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SESSIONDELETE);
+			preparedStatement.setString(1, adminSessionID);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			preparedStatement.executeUpdate();
+			// Step 4: Process the ResultSet object.
+	
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+		}
+	}
+	
+	public boolean adminCheck(String sessionID) {
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		boolean result = false;
+		
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(ADMINCHECK);
+			preparedStatement.setString(1, sessionID);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			rs = preparedStatement.executeQuery();
+			// Step 4: Process the ResultSet object.
+			if(rs.next()) result = rs.getBoolean("isAdmin");
+			
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+		}
+		return result;
+		
 	}
 	
 	public List<Book> selectCategory(String category) {

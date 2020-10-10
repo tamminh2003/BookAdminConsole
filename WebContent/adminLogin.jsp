@@ -8,7 +8,7 @@
 
 <html>
 <head>
-<title>User Login</title>
+<title>Admin Login</title>
 <style>
 #form-container {
 	box-sizing: content-box;
@@ -46,8 +46,8 @@
 	</c:forEach>
 
 	<div id="form-container">
-		<h1>User Login</h1>
-		<form action="userValidate.jsp" method="post">
+		<h1>Admin Login</h1>
+		<form action="Validate.jsp" method="post">
 			<p><label for="uname"><b>Username</b></label> <input type="text"
 					placeholder="Enter Username" name="uname" required>
 			</p>
