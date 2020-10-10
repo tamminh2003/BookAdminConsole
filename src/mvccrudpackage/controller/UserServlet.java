@@ -1,6 +1,8 @@
 package mvccrudpackage.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import mvccrudpackage.model.bean.Book;
 import mvccrudpackage.model.dao.UserDAO;
 
 /**
@@ -61,9 +64,17 @@ public class UserServlet extends HttpServlet {
 			// -------------------------------------
 			if (userDAO.userCheck(session.getId())) {
 				// ---------------------------------
-				RequestDispatcher dispatcher = request.getRequestDispatcher("test.jsp");
-				request.setAttribute("test", "Login successful");
-				dispatcher.forward(request, response);
+				switch (action) {
+				case "search":
+					searchBook(request, response);
+					break;
+				case "select":
+					selectBook(request, response);
+					break;
+				default:
+					listBook(request, response);
+					break;
+			}
 				// ---------------------------------
 			} else {
 				response.sendRedirect("Login.jsp");
@@ -73,6 +84,34 @@ public class UserServlet extends HttpServlet {
 		} catch (Exception ex) {
 			throw new ServletException(ex);
 		}
+	}
+
+	private void searchBook(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		String category = request.getParameter("search");
+		List<Book> listBook = userDAO.selectCategory(category);
+		request.setAttribute("listBook", listBook);
+		request.setAttribute("search", category);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+		dispatcher.forward(request, response);
+	}
+
+	private void selectBook(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Book existingBook = userDAO.selectBook(id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("book.jsp");
+		request.setAttribute("book", existingBook);
+		dispatcher.forward(request, response);
+	}
+	
+
+	private void listBook(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException, ServletException {
+		List<Book> listBook = userDAO.selectAllBooks();
+		request.setAttribute("listBook", listBook);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("userList.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }
