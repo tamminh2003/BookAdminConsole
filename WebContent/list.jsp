@@ -49,6 +49,11 @@ tr, th, td {
 					<input type="hidden" name="action" value="new" />
 					<button type="submit">Add New Book</button>
 				</form>
+				
+				<form action="AdminServlet" method="post">
+					<input type="hidden" name="action" value="adminLogout" />
+					<button type="submit">Logout</button>
+				</form>
 		</div>
 		
 		<table>
