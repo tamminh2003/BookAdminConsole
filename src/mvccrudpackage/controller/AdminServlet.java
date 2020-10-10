@@ -54,6 +54,7 @@ public class AdminServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String action = request.getParameter("action");
+		String username = request.getParameter("username");
 		System.out.println("action = " + action);
 		
 		if(action == null) action = "no action";
@@ -62,7 +63,7 @@ public class AdminServlet extends HttpServlet {
 			HttpSession session = request.getSession(false);
 		
 			if(action.equals("adminLogin")) {
-				adminDAO.adminLogin(session.getId());
+				adminDAO.adminLogin(session.getId(), username);
 			} else if(action.equals("adminLogout")) {
 				adminDAO.adminLogout(session.getId());
 			}
