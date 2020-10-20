@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mvccrudpackage.model.bean.Book;
+import mvccrudpackage.model.bean.Category;
 
 public class AdminDAO {
 
@@ -34,6 +35,7 @@ public class AdminDAO {
 	private String SESSIONUPDATE = "INSERT INTO session VALUES (?, ?)";
 	private String SESSIONDELETE = "DELETE FROM session WHERE sessionid = ?;";
 	private String ADMINCHECK = "select isAdmin from users where username = (select username from session where sessionid= ?)";
+	private String SELECTALLCATEGORY = "SELECT * FROM book_category;";
 	
 	/* Constructor */
 	public AdminDAO() {
@@ -281,6 +283,38 @@ public class AdminDAO {
 		
 	}
 	
+	public List<Category> selectAllCategory() {
+		List<Category> listCategory = new ArrayList<Category>();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SELECTALLCATEGORY);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			rs = preparedStatement.executeQuery();
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				Category category = new Category();
+
+				category.setCid(rs.getInt("cid"));
+				category.setCategoryTitle(rs.getString("categorytitle"));
+
+				listCategory.add(category);
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+		}
+		
+		return listCategory;
+	}
+	
 	public List<Book> selectCategory(String category) {
 		List<Book> books = new ArrayList<>();
 	
@@ -387,5 +421,7 @@ public class AdminDAO {
 			}
 		}
 	}
+
+
 
 }
