@@ -17,45 +17,53 @@ tr, th, td {
 	margin: auto;
 	padding: 100px;
 }
+
+#footer-menu {
+	width: fit-content;
+	margin: auto;
+	padding: 10px;
+}
 </style>
 
 <script>
-		function areYouSure(){
-			confirm("Do you want to delete?");
-		}
-	</script>
+	function areYouSure() {
+		confirm("Do you want to delete?");
+	}
+</script>
 </head>
 <body style="font-family: arial, serif;">
 
 	<div align="center">
-	
+
 		<h1>Admin Console</h1>
-		
+
 		<c:if test="${search != null}">
-			<h1> <c:out value="${search} Search Result" /> </h1>
+			<h1>
+				<c:out value="${search} Search Result" />
+			</h1>
 		</c:if>
-		
+
 		<c:if test="${search == null}">
 			<h1>List of Books</h1>
 		</c:if>
-		
+
 		<div id="nav-menu">
-		
-				<form action="AdminServlet" method="post">
-					<button type="submit">Show All Books</button>
-				</form>
-				
-				<form action="AdminServlet" method="post">
-					<input type="hidden" name="action" value="new" />
-					<button type="submit">Add New Book</button>
-				</form>
-				
-				<form action="AdminServlet" method="post">
-					<input type="hidden" name="action" value="adminLogout" />
-					<button type="submit">Logout</button>
-				</form>
+
+			<form action="AdminServlet" method="post">
+				<button type="submit">Show All Books</button>
+			</form>
+
+			<form action="AdminServlet" method="post">
+				<input type="hidden" name="action" value="new" />
+				<button type="submit">Add New Book</button>
+			</form>
+
+			<form action="AdminServlet" method="post">
+				<input type="hidden" name="action" value="adminLogout" />
+				<button type="submit">Logout</button>
+			</form>
 		</div>
-		
+
 		<table>
 
 			<tr align=center>
@@ -71,7 +79,7 @@ tr, th, td {
 				<th></th>
 
 			</tr>
-			
+
 			<c:forEach var="book" items="${listBook}">
 				<tr align=center>
 
@@ -98,12 +106,18 @@ tr, th, td {
 					</td>
 				</tr>
 			</c:forEach>
-			
+
 		</table>
-		
+
 	</div>
 
-	<div id="search-container" align = center>
+	<div id="footer-menu" align="center">
+		<form action="AdminServlet" method="GET">
+			<input type="hidden" name="action" value="category" />
+			<button type="submit">Manage Category</button>
+		</form>
+	</div>
+	<div id="search-container" align=center>
 		<jsp:include page="searchbar.jsp" />
 	</div>
 
