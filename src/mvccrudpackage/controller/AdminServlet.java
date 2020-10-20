@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mvccrudpackage.model.bean.Book;
+import mvccrudpackage.model.bean.Category;
 import mvccrudpackage.model.dao.AdminDAO;
 
 /**
@@ -56,58 +57,70 @@ public class AdminServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String username = request.getParameter("username");
 		System.out.println("action = " + action);
-		
-		if(action == null) action = "no action";
-		
+
+		if (action == null)
+			action = "no action";
+
 		try {
 			HttpSession session = request.getSession(false);
-		
-			if(action.equals("adminLogin")) {
+
+			if (action.equals("adminLogin")) {
 				adminDAO.adminLogin(session.getId(), username);
-			} else if(action.equals("adminLogout")) {
+			} else if (action.equals("adminLogout")) {
 				adminDAO.adminLogout(session.getId());
 			}
-			
+
 			// -------------------------------------
 			if (adminDAO.adminCheck(session.getId())) {
 				// ---------------------------------
 				switch (action) {
-					case "new":
-						showNewBook(request, response);
-						break;
-					case "insert":
-						insertBook(request, response);
-						break;
-					case "delete":
-						deleteBook(request, response);
-						break;
-					case "edit":
-						showEditBook(request, response);
-						break;
-					case "update":
-						updateBook(request, response);
-						break;
-					case "search":
-						searchBook(request, response);
-						break;
-					case "select":
-						selectBook(request, response);
-						break;
-					default:
-						listBook(request, response);
-						break;
+				case "new":
+					showNewBook(request, response);
+					break;
+				case "insert":
+					insertBook(request, response);
+					break;
+				case "delete":
+					deleteBook(request, response);
+					break;
+				case "edit":
+					showEditBook(request, response);
+					break;
+				case "update":
+					updateBook(request, response);
+					break;
+				case "search":
+					searchBook(request, response);
+					break;
+				case "select":
+					selectBook(request, response);
+					break;
+				case "category":
+					showCategory(request, response);
+					break;
+				default:
+					listBook(request, response);
+					break;
 				}
 				// ---------------------------------
 			} else {
 				response.sendRedirect("adminLogin.jsp");
 			}
 			// -------------------------------------
-			
+
 		} catch (Exception ex) {
 			throw new ServletException(ex);
 		}
 	}// End of doPost method
-	
+
+	private void showCategory(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		List<Category> listCategory = adminDAO.selectAllCategory();
+		request.setAttribute("listCategory", listCategory);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("adminCategory.jsp");
+		dispatcher.forward(request, response);
+	}
+
 	private void listBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		List<Book> listBook = adminDAO.selectAllBooks();
@@ -122,22 +135,21 @@ public class AdminServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	private void insertBook(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+	private void insertBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		Book book = new Book();
-		
+
 		Timestamp date = Timestamp.valueOf(request.getParameter("publisheddate") + " 0:0:0");
-		
+
 		System.out.println("Date from jsp: " + request.getParameter("publisheddate"));
-		
-		book.setCid( Integer.parseInt(request.getParameter("cid")) );
-		book.setBooktitle( request.getParameter("booktitle") );
-		book.setDescription( request.getParameter("description") );
-		book.setAuthor( request.getParameter("author") );
-		book.setPublisheddate( date );
-		book.setIsbn( request.getParameter("isbn") );
-		book.setPrice( Double.parseDouble(request.getParameter("price")) );
-		book.setNoofpages( Integer.parseInt(request.getParameter("noofpages")) );
+
+		book.setCid(Integer.parseInt(request.getParameter("cid")));
+		book.setBooktitle(request.getParameter("booktitle"));
+		book.setDescription(request.getParameter("description"));
+		book.setAuthor(request.getParameter("author"));
+		book.setPublisheddate(date);
+		book.setIsbn(request.getParameter("isbn"));
+		book.setPrice(Double.parseDouble(request.getParameter("price")));
+		book.setNoofpages(Integer.parseInt(request.getParameter("noofpages")));
 
 		adminDAO.insertBook(book);
 		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=list&login=1");
@@ -152,32 +164,30 @@ public class AdminServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	private void updateBook(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+	private void updateBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		Book book = new Book();
 		Timestamp date = Timestamp.valueOf(request.getParameter("publisheddate") + " 0:0:0");
-		
-		book.setBid( Integer.parseInt(request.getParameter("bid")) );
-		book.setCid( Integer.parseInt(request.getParameter("cid")) );
-		book.setBooktitle( request.getParameter("booktitle") );
-		book.setDescription( request.getParameter("description") );
-		book.setAuthor( request.getParameter("author") );
-		book.setPublisheddate( date );
-		book.setIsbn( request.getParameter("isbn") );
-		book.setPrice( Double.parseDouble(request.getParameter("price")) );
-		book.setNoofpages( Integer.parseInt(request.getParameter("noofpages")) );
-		
+
+		book.setBid(Integer.parseInt(request.getParameter("bid")));
+		book.setCid(Integer.parseInt(request.getParameter("cid")));
+		book.setBooktitle(request.getParameter("booktitle"));
+		book.setDescription(request.getParameter("description"));
+		book.setAuthor(request.getParameter("author"));
+		book.setPublisheddate(date);
+		book.setIsbn(request.getParameter("isbn"));
+		book.setPrice(Double.parseDouble(request.getParameter("price")));
+		book.setNoofpages(Integer.parseInt(request.getParameter("noofpages")));
+
 		adminDAO.updateBook(book);
 		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=list&login=1");
 	}
 
-	private void deleteBook(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		adminDAO.deleteBook(id);
 		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=list&login=1");
 	}
-	
+
 	private void searchBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		String category = request.getParameter("search");
@@ -187,7 +197,7 @@ public class AdminServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+
 	private void selectBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		int id = Integer.parseInt(request.getParameter("id"));
