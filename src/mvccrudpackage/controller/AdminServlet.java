@@ -177,6 +177,8 @@ public class AdminServlet extends HttpServlet {
 	private void showNewBook(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("formNewBook.jsp");
+		List<Category> categories = adminDAO.selectAllCategory();
+		request.setAttribute("categories", categories);
 		dispatcher.forward(request, response);
 	}
 
@@ -206,6 +208,8 @@ public class AdminServlet extends HttpServlet {
 		Book existingBook = adminDAO.selectBook(id);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("formNewBook.jsp");
 		request.setAttribute("book", existingBook);
+		List<Category> categories = adminDAO.selectAllCategory();
+		request.setAttribute("categories", categories);
 		dispatcher.forward(request, response);
 	}
 
