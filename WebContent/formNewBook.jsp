@@ -19,50 +19,58 @@
 		<form action="${pageContext.request.contextPath}/AdminServlet" method="post">
 		
 		<c:if test="${book != null}">
-				<input type="hidden" name="action" value="update">
+			<input type="hidden" name="action" value="update">
 		</c:if>
 		
 		<c:if test="${book == null}">
-				<input type="hidden" name="action" value="insert">
+			<input type="hidden" name="action" value="insert">
 		</c:if>
 		
 		<table border="1" cellpadding="5">
 			
 			<caption>
-				<h2>
+				<h1>
 					<c:if test="${book != null}">
  						Edit Book
  					</c:if>
 					<c:if test="${book == null}">
  						Add New Book
  					</c:if>
-				</h2>
+				</h1>
 			</caption>
 			
 			<c:if test="${book != null}">
 				<input type="hidden" name="bid"
-					value="<c:out value='${book.getBid()}' />" />
+					value="<c:out value='${book.getBid()}'/>" />
 			</c:if>
 			
 			<tr>
 				<th>Book Category:</th>
 				<c:if test="${book != null}">
 					<td><select name="cid">
-						<option <c:if test="${book.getCid() == 1}"> selected </c:if> value="1">Fantasy</option>
-						<option <c:if test="${book.getCid() == 2}"> selected </c:if> value="2">Adventure</option>
-						<option <c:if test="${book.getCid() == 3}"> selected </c:if> value="3">Romance</option>
-						<option <c:if test="${book.getCid() == 4}"> selected </c:if> value="4">Academic</option>
+					
+					<c:forEach var="category" items="${categories}">
+						<option
+							<c:if test="${book.getCid() == category.getCid()}"> selected </c:if> 
+							value="${category.getCid()}">
+								<c:out value="${category.getCategoryTitle()}"/>
+						</option>
+					</c:forEach>
+						
 					</select></td>
 				</c:if>
 			
 				<c:if test="${book == null}">
 					<td><select name="cid">
-						<option value="1">Fantasy</option>
-						<option value="2">Adventure</option>
-						<option value="3">Romance</option>
-						<option value="4">Academic</option>
+						<c:forEach var="category" items="${categories}">
+							<option value="${category.getCid()}">
+									<c:out value="${category.getCategoryTitle()}"/>
+							</option>
+						</c:forEach>
+
 					</select></td>
 				</c:if>
+				
 			</tr>
 			
 			<tr>
