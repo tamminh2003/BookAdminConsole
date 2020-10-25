@@ -29,7 +29,7 @@
 				</tr>
 			</table>
 			<br>
-			<input type="submit" value="Edit" />
+			<input type="submit" value="Save" />
 		</form>
 		
 	</div>
