@@ -40,7 +40,8 @@ public class AdminDAO {
 	private String SELECTMAXCID = "SELECT MAX(cid) AS CID FROM book_category;";
 	private String DELETECATEGORYSQL = "DELETE FROM book_category WHERE cid = ?;";
 	private String SELECTCATEGORYID = "SELECT * FROM book_category WHERE cid = ?;";
-	private String EDITCATEGORYSQL = "UPDATE book_category set categorytitle = ? where cid = ?;";
+	private String EDITCATEGORYSQL = "UPDATE book_category SET categorytitle = ? WHERE cid = ?;";
+	private String CATEGORYCOUNTSQL = "SELECT COUNT(*) AS count FROM book_category;";
 	/* Constructor */
 	public AdminDAO() {
 
@@ -448,6 +449,28 @@ public class AdminDAO {
 		}
 		
 		return categoryUpdated;
+	}
+	
+	public int categoryCount() throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		int result = 0;
+		
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(CATEGORYCOUNTSQL);
+			rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			
+		} finally {
+			
+		}
+		return result;
 	}
 
 	private int selectMaxCid() {
