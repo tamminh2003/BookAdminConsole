@@ -36,7 +36,11 @@ public class AdminDAO {
 	private String SESSIONDELETE = "DELETE FROM session WHERE sessionid = ?;";
 	private String ADMINCHECK = "select isAdmin from users where username = (select username from session where sessionid= ?)";
 	private String SELECTALLCATEGORY = "SELECT * FROM book_category;";
-	
+	private String INSERTCATEGORYSQL = "INSERT INTO book_category VALUES (?, ?);";
+	private String SELECTMAXCID = "SELECT MAX(cid) AS CID FROM book_category;";
+	private String DELETECATEGORYSQL = "DELETE FROM book_category WHERE cid = ?;";
+	private String SELECTCATEGORYID = "SELECT * FROM book_category WHERE cid = ?;";
+	private String EDITCATEGORYSQL = "UPDATE book_category set categorytitle = ? where cid = ?;";
 	/* Constructor */
 	public AdminDAO() {
 
@@ -356,6 +360,122 @@ public class AdminDAO {
 		return books;
 	}
 	
+	public void insertCategory(Category category) throws SQLException {
+		int maxCid = selectMaxCid();
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(INSERTCATEGORYSQL);
+			
+			preparedStatement.setInt(1, maxCid + 1);
+			preparedStatement.setString(2, category.getCategoryTitle());
+			
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, null);
+		}
+	}
+	
+	public boolean deleteCategory(int id) throws SQLException {
+			boolean categoryDeleted = false;
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(DELETECATEGORYSQL);
+				preparedStatement.setInt(1, id);
+				categoryDeleted = preparedStatement.executeUpdate() > 0 ? true : false;
+			} finally {
+				finallySQLException(connection, preparedStatement, null);
+			}
+			return categoryDeleted;
+	}
+	
+	public Category selectCategory(int id) {
+		Category category = new Category();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		// Step 1: Establishing a Connection
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SELECTCATEGORYID);
+			preparedStatement.setInt(1, id);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			rs = preparedStatement.executeQuery();
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				category.setCid(rs.getInt("cid"));
+				category.setCategoryTitle(rs.getString("categorytitle"));	
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+
+		}
+		return category;
+	}
+	
+	public boolean editCategory(Category category) throws SQLException {
+		boolean categoryUpdated = false;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(EDITCATEGORYSQL);
+
+			preparedStatement.setString(1, category.getCategoryTitle());
+			preparedStatement.setInt(2, category.getCid());
+			
+			System.out.println(preparedStatement);
+			
+			categoryUpdated = preparedStatement.executeUpdate() > 0 ? true : false;
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, null);
+		}
+		
+		return categoryUpdated;
+	}
+
+	private int selectMaxCid() {
+		int result = 0;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		// Step 1: Establishing a Connection
+		try {
+			connection = getConnection();
+			// Step 2:Create a statement using connection object
+			preparedStatement = connection.prepareStatement(SELECTMAXCID);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			rs = preparedStatement.executeQuery();
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				result = rs.getInt("cid");
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		} finally {
+			finallySQLException(connection, preparedStatement, rs);
+
+		}
+		return result;
+	}
+
 	private int selectMaxBid() {
 		int result = 0;
 		Connection connection = null;
@@ -397,7 +517,7 @@ public class AdminDAO {
 			}
 		}
 	}
-
+	
 	private void finallySQLException(Connection c, PreparedStatement p, ResultSet r) {
 		if (r != null) {
 			try {
@@ -421,7 +541,5 @@ public class AdminDAO {
 			}
 		}
 	}
-
-
 
 }
