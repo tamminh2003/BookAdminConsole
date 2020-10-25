@@ -98,6 +98,18 @@ public class AdminServlet extends HttpServlet {
 				case "category":
 					showCategory(request, response);
 					break;
+				case "addCategory":
+					addCategory(request, response);
+					break;
+				case "deleteCategory":
+					deleteCategory(request, response);
+					break;
+				case "showEditCategory":
+					showEditCategory(request, response);
+					break;
+				case "editCategory":
+					editCategory(request, response);
+					break;
 				default:
 					listBook(request, response);
 					break;
@@ -112,6 +124,39 @@ public class AdminServlet extends HttpServlet {
 			throw new ServletException(ex);
 		}
 	}// End of doPost method
+
+	private void editCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		Category category = new Category();
+		category.setCid(Integer.parseInt(request.getParameter("cid")));
+		category.setCategoryTitle(request.getParameter("categorytitle"));
+
+		adminDAO.editCategory(category);
+		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=category&login=1");
+	}
+
+	private void showEditCategory(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Category existingCategory = adminDAO.selectCategory(id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("newCategory.jsp");
+		request.setAttribute("category", existingCategory);
+		dispatcher.forward(request, response);
+	}
+
+	private void deleteCategory(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		adminDAO.deleteCategory(id);
+		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=category&login=1");
+	}
+
+	private void addCategory(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		Category category = new Category();
+		category.setCategoryTitle("categoryTitle");
+		adminDAO.insertCategory(category);
+		response.sendRedirect(request.getContextPath() + "/AdminServlet?action=category&login=1");
+	}
 
 	private void showCategory(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
