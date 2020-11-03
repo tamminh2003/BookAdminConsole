@@ -120,5 +120,7 @@ tr, th, td {
 	<div id="search-container" align=center>
 		<jsp:include page="searchbar.jsp" />
 	</div>
+	
+	<div></div>
 
 </body>
